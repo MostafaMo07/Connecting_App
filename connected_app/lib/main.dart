@@ -1,10 +1,39 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
+void pretendFileIO() {
+  print('File IO: Started');
+  print('File IO: File Content => Hello Futures');
+  print('File IO: Done');
 }
 
-class MyApp extends StatelessWidget {
+Future<String> pretendHTTPRequests() {
+  print('HTTP Request: Started');
+  return Future.delayed(Duration(seconds: 8), () => ('Json Place Holder'));
+}
+
+Future<String> pretendDatabaseQuery(String searchTerm) {
+  print('DatabaseQuery for $searchTerm: Started');
+  return Future.delayed(
+      Duration(seconds: 2),
+      () =>
+          ('DatabaseQuery: Resultset => ID: 1, fname: mostafa, lname: morsy'));
+}
+
+void main(List<String> arguments) {
+  pretendFileIO();
+  var response = pretendHTTPRequests();
+  response.then((s) {
+    print('HTTP Request: Response => $s');
+    print('HTTP Request: Done');
+    var query = pretendDatabaseQuery(s);
+    query.then((rs) {
+      print('DatabaseQuery: Resultset => $rs');
+      print('DatabaseQuery: Done');
+    });
+  });
+}
+
+/*class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -114,4 +143,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
+}*/
