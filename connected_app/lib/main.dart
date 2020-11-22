@@ -1,3 +1,4 @@
+import 'package:connected_app/test_connection.dart';
 import 'package:flutter/material.dart';
 
 void pretendFileIO() {
@@ -6,12 +7,16 @@ void pretendFileIO() {
   print('File IO: Done');
 }
 
-Future<String> pretendHTTPRequests() {
+Future<String> pretendHTTPRequests({bool withError = false}) async {
   print('HTTP Request: Started');
-  return Future.delayed(Duration(seconds: 8), () => ('Json Place Holder'));
+  if (withError) {
+    return Future.error('Pretend Http Timeout');
+  } else {
+    return Future.delayed(Duration(seconds: 8), () => ('Json Place Holder'));
+  }
 }
 
-Future<String> pretendDatabaseQuery(String searchTerm) {
+Future<String> pretendDatabaseQuery(String searchTerm) async {
   print('DatabaseQuery for $searchTerm: Started');
   return Future.delayed(
       Duration(seconds: 2),
@@ -19,19 +24,20 @@ Future<String> pretendDatabaseQuery(String searchTerm) {
           ('DatabaseQuery: Resultset => ID: 1, fname: mostafa, lname: morsy'));
 }
 
-void main(List<String> arguments) {
-  pretendFileIO();
-  var response = pretendHTTPRequests();
-  response.then((s) {
-    print('HTTP Request: Response => $s');
-    print('HTTP Request: Done');
-    var query = pretendDatabaseQuery(s);
-    query.then((rs) {
-      print('DatabaseQuery: Resultset => $rs');
-      print('DatabaseQuery: Done');
-    });
-  });
+void main() {
+  useHttpGet();
 }
+
+/*void main(List<String> arguments) async {
+  pretendFileIO();
+  try {
+    var response = await pretendHTTPRequests(withError: false);
+    var query = await pretendDatabaseQuery(response);
+    print(query);
+  } catch (e) {
+    print('an occured $e');
+  }
+}*/
 
 /*class MyApp extends StatelessWidget {
   // This widget is the root of your application.
